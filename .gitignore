@@ -1,0 +1,5 @@
+runs/
+__pycache__/
+*.mp4
+*.mov
+weights/

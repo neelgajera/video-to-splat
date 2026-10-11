@@ -1,0 +1,6 @@
+[submodule "third_party/beta-splatting"]
+	path = third_party/beta-splatting
+	url = https://github.com/RongLiu-Leo/beta-splatting.git
+[submodule "third_party/vggt"]
+	path = third_party/vggt
+	url = https://github.com/facebookresearch/vggt.git
