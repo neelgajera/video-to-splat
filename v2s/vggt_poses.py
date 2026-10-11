@@ -65,11 +65,13 @@ def reconstruct(images: Path, work: Path, out: Path, max_frames: int = 48, conf_
         torch.cuda.reset_peak_memory_stats()
         torch.cuda.synchronize()
     t0 = time.time()
-    with torch.no_grad():
+    # bf16 weights + autocast: some heads build float32 tensors internally, autocast reconciles the two.
+    with torch.no_grad(), torch.autocast(device_type=device, dtype=dtype):
         tokens, ps_idx = model.aggregator(imgs[None].to(dtype))
         pose_enc = model.camera_head(tokens)[-1]
-        extrinsic, intrinsic = pose_encoding_to_extri_intri(pose_enc.float(), imgs.shape[-2:])
-        depth, conf = model.depth_head(tokens, imgs[None].to(dtype), ps_idx)
+        # The depth head upsamples to full resolution; 2 frames at a time keeps it inside 6 GB.
+        depth, conf = model.depth_head(tokens, imgs[None].to(dtype), ps_idx, frames_chunk_size=2)
+    extrinsic, intrinsic = pose_encoding_to_extri_intri(pose_enc.float(), imgs.shape[-2:])
     if device == "cuda":
         torch.cuda.synchronize()
     t_infer = time.time() - t0

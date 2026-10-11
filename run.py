@@ -30,6 +30,8 @@ def main() -> None:
     ap.add_argument("--max-side", type=int, default=1600, help="long side of exported frames in px")
     ap.add_argument("--rotate", type=int, choices=sorted(ROTATIONS), default=0, help="rotate frames clockwise")
     ap.add_argument("--poses", choices=["colmap", "vggt"], default="colmap")
+    ap.add_argument("--vggt-frames", type=int, default=28,
+                    help="frames VGGT sees in one pass (GPU-memory bound: 28 fits 6 GB)")
     ap.add_argument("--iterations", type=int, default=30_000)
     ap.add_argument("--cap-max", type=int, default=300_000, help="max splats (300k fits a 6 GB GPU)")
     ap.add_argument("--showcase", type=Path, help="beta-splatting-showcase checkout to publish into")
@@ -83,7 +85,7 @@ def main() -> None:
             stats = colmap.reconstruct(images, run / "colmap", dataset)
         else:
             from v2s import vggt_poses
-            stats = vggt_poses.reconstruct(images, run / "vggt", dataset)
+            stats = vggt_poses.reconstruct(images, run / "vggt", dataset, max_frames=args.vggt_frames)
         report["poses"] = {"backend": args.poses, **stats, "seconds": round(time.time() - t0, 1)}
         save()
         print(f"   {args.poses}: {stats.get('registered_images')}/{stats.get('input_images')} images registered "
