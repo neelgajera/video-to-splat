@@ -83,7 +83,7 @@ needs fewer primitives for the same quality. Defaults (`--cap-max 300000`, 1600 
 
 Prunes near-transparent splats and computes the orbit lock, camera ring and cinematic tour from the
 training cameras, using the tools in
-[beta-splatting-showcase](../beta-splatting-showcase). The scene then appears in the gallery.
+[beta-splatting-showcase](https://github.com/neelgajera/beta-splatting-showcase). The scene then appears in the gallery.
 
 ## Results
 
@@ -98,7 +98,7 @@ Chevy Colorado, 70 s iPhone walk-around (1920×1080 HEVC), on a laptop RTX 3060 
 | Training | 30k iterations, 300k primitives, ~38 min |
 | Export | 261k splats after pruning (31 MB PLY), orbit lock and tour computed from the training cameras |
 
-The same poses also drive [spin-stabilizer](../spin-stabilizer), which turns the walk-around into a level
+The same poses also drive [spin-stabilizer](https://github.com/neelgajera/spin-stabilizer), which turns the walk-around into a level
 turntable spin (jitter 40 → 10 px).
 
 ## Setup (Windows, CUDA)
